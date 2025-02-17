@@ -1,4 +1,4 @@
-import os from 'node:os'
+const os = require('node:os')
 
 console.log('Información del sistema operativo:')
 console.log('-------------------')
