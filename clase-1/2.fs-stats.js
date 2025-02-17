@@ -6,5 +6,5 @@ console.log(
     stats.isFile(),
     stats.isDirectory(),
     stats.isSymbolicLink(),
-    stats.size(),
+    stats.size,
 )
