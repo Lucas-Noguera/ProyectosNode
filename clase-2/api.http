@@ -6,6 +6,6 @@ Content-Type: application/json
 {
   "name": "ditto",
   "type": "rock",
-  "attack": 50,
-  "defense": 50
+  "attack": 70,
+  "defense": 70
 }
