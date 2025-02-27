@@ -1,0 +1,3 @@
+GET http://localhost:1234/movies/04986507-b3ed-442c-8ae7-4c5df804f896
+###
+GET http://localhost:1234/movies?genre=Action
