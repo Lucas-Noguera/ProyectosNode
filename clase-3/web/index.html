@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Probar API REST</title>
+    <style>
+        article {
+            border: 1px solid black;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        img {
+            width: 100%;
+        }   
+        h2 {
+            margin-top: 0;
+        }
+        p {
+            margin-top: 0;
+        }
+        main {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        
+    </style>
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('http://localhost:1234/movies')
+        .then(res => res.json())
+        .then(movies => {
+            const html = movies.map(movie => {
+                return `
+                <article data-id="${movie.id}">
+                    <h2>${movie.title}</h2>
+                    <img src="${movie.poster}" alt="${movie.title}">
+                    <p>${movie.director}</p>
+                    <p>${movie.genre}</p>
+                    <p>${movie.year}</p>
+                </article>
+                `
+            }).join('')
+            document.querySelector('main').innerHTML = html
+        })
+        .catch(err => console.error('API Error:', err))
+})
+
+    </script>
+</head>
+<body>
+<main>
+
+</main>
+</body>
+</html>

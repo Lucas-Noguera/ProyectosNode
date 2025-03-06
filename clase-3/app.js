@@ -1,12 +1,18 @@
 const express = require('express')
 const movies = require('./movies.json')
 const crypto = require('node:crypto')
+const { validateMovie, validatePartialMovies } = require('./schemas/movies')
 
 const app = express()
 app.use(express.json())
 app.disable('x-powered-by')
 
+app.get('/', (req, res) => {
+  res.send('<h1>Bienvenido a mi pagina web</h1>')
+})
+
 app.get('/movies', (req, res) => {
+  res.header('Access-Control-Allow-Origin', '*')
   const { genre } = req.query
   if (genre) {
     const filteredMovies = movies.filter(
@@ -14,6 +20,8 @@ app.get('/movies', (req, res) => {
     )
     return res.json(filteredMovies)
   }
+
+  res.json(movies)
 })
 
 app.get('/movies/:id', (req, res) => {
@@ -26,30 +34,47 @@ app.get('/movies/:id', (req, res) => {
 })
 
 app.post('/movies', (req, res) => {
-  const {
-    title,
-    genre,
-    year,
-    director,
-    duration,
-    rate,
-    poster
-  } = req.body
+  const result = validateMovie(req.body)
+  if (result.error) {
+    return res.status(400).json({ error: result.error.issues })
+  }
+
+  console.log(result.data)
 
   const newMovies = {
     id: crypto.randomUUID(),
-    title,
-    genre,
-    year,
-    director,
-    duration,
-    rate: rate ?? 0,
-    poster
+    ...result.data
   }
 
   movies.push(newMovies)
 
   res.status(201).json(newMovies)
+})
+
+app.patch('/movies/:id', (req, res) => {
+  const result = validatePartialMovies(req.body)
+
+  if (!result.success) {
+    return res.status(400).json({ error: result.error.issues })
+  }
+
+  const { id } = req.params
+
+  const movieIndex = movies.findIndex((movie) => movie.id === id)
+  console.log(movieIndex)
+
+  if (movieIndex === -1) {
+    return res.status(404).json({ message: 'Movie not found' })
+  }
+
+  const updateMovie = {
+    ...movies[movieIndex],
+    ...result.data
+  }
+
+  movies[movieIndex] = updateMovie
+
+  res.json(updateMovie)
 })
 
 const PORT = process.env.PORT ?? 1234

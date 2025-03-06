@@ -1,16 +1,26 @@
-GET http://localhost:1234/movies
-###
-GET http://localhost:1234/movies?genre=Action
-###
-POST http://localhost:1234/movies
-Content-Type: application/json
+  ###
+  POST http://localhost:1234/movies
+  Content-Type: application/json
 
-{
-    "title": "The Godfather",
-    "year": 1972,
-    "director": "Francis Ford Coppola",
-    "duration": 175,
-    "poster": "https://img.fruugo.com/product/4/49/14441494_max.jpg",
-    "genre": ["Crime", "Drama"],
-    "rate": 9.3
-  }
+  {
+      "title": "The Godfather",
+      "year": 1972,
+      "direct+or": "Francis Ford Coppola",
+      "duration": 175,
+      "poster": "https://img.fruugo.com/product/4/49/14441494_max.jpg",
+      "genre": ["Crime", "Drama"]
+    }
+
+###
+    GET http://localhost:1234/movies
+
+###
+    GET http://localhost:1234/movies?genre=Drama
+
+### Actualizar pelicula
+    PATCH http://localhost:1234/movies/dcdd0fad-a94c-4810-8acc-5f108d3b18c3
+    Content-Type: application/json
+
+    {
+      "year": 2005
+    }
