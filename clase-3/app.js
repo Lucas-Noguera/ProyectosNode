@@ -8,7 +8,8 @@ app.use(express.json())
 app.disable('x-powered-by')
 
 app.get('/', (req, res) => {
-  res.send('<h1>Bienvenido a mi pagina web</h1>')
+  // eslint-disable-next-line n/no-path-concat, no-irregular-whitespace
+  res.sendFile(__dirname + '/web/index.html')
 })
 
 app.get('/movies', (req, res) => {
