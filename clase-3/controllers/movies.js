@@ -1,4 +1,4 @@
-import { MovieModel } from '../models/movie.js'
+import { MovieModel } from '../models/database/movie.js'
 import { validateMovie, validatePartialMovies } from '../schemas/movies.js'
 
 export class MovieController {
@@ -10,7 +10,7 @@ export class MovieController {
 
   static async getById (req, res) {
     const { id } = req.params
-    console.log(req.params)
+    console.log(id)
     const movie = await MovieModel.getById({ id })
 
     if (movie) return res.json(movie)

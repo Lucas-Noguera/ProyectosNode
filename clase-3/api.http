@@ -1,17 +1,17 @@
-  ###
+###
     GET http://localhost:1234/movies
   
-  ###
+###
   POST http://localhost:1234/movies
   Content-Type: application/json
 
   {
-      "title": "The Godfather",
-      "year": 1972,
-      "direct+or": "Francis Ford Coppola",
-      "duration": 175,
-      "poster": "https://img.fruugo.com/product/4/49/14441494_max.jpg",
-      "genre": ["Crime", "Drama"]
+      "title": "Avengers : Endgame",
+      "year": 2019,
+      "director": "Joss Whedon",
+      "duration": 142,
+      "poster": "https://m.media-amazon.com/images/I/71niXI3lxlL._AC_SL1183_.jpg",
+      "genre": ["Action", "Adventure", "Sci-Fi" ]
     }
 
 
