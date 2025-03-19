@@ -16,7 +16,7 @@
     "nodejs",
     "midudev"
   ],
-  "author": "Miguel Ángel Durán García - midudev",
+  "author": "Lucas Noguera",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/midudev/curso-node-js/issues"

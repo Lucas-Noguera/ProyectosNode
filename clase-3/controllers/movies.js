@@ -1,4 +1,4 @@
-import { MovieModel } from '../models/mongodb/movie.js'
+import { MovieModel } from '../models/mysql/movie.js'
 import { validateMovie, validatePartialMovies } from '../schemas/movies.js'
 
 export class MovieController {
@@ -52,6 +52,6 @@ export class MovieController {
       return res.json({ message: 'Movie not found' })
     }
 
-    return res.json({ message: 'Movie delted' })
+    return res.json({ message: 'Movie deleted' })
   }
 }
