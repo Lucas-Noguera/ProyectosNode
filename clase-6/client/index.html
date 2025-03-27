@@ -5,12 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat!</title>
     <script type="module">
-        const form = document.getElementById('form')
-        const input = document.getElementById('input')
+      import { io } from 'https://cdn.socket.io/4.6.1/socket.io.esm.min.js'
+      const socket = io()
+      
+      const form = document.getElementById('form')
+      const input = document.getElementById('input')
+      const messages = document.getElementById('messages')
 
-        import { io } from 'https://cdn.socket.io/4.6.1/socket.io.esm.min.js'
+      socket.on('chat message', (msg) => {
+        const li = document.createElement('li')
+        li.textContent = msg
+        messages.appendChild(li)
+      })
 
-        const socket = io()
+      form.addEventListener('submit', (e) => {
+        e.preventDefault()
+
+        if(input.value){
+          socket.emit('chat message', input.value)
+          input.value = ''
+          
+        }
+      })
 
     </script>
 
@@ -99,6 +115,7 @@
 </head>
 <body>
    <section id="chat">
+    <ul id="messages"></ul>
     <form id="form">
         <input type="text" name="message" id="input" placeholder="Type a message" 
         autocomplete="off" />
