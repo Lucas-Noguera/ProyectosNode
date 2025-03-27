@@ -31,12 +31,13 @@ const db = createClient({
 await db.execute(`
   CREATE TABLE IF NOT EXISTS messages (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  content TEXT
+  content TEXT,
+  user TEXT
   )
   
   `)
 
-io.on('connection', (socket) => {
+io.on('connection', async (socket) => {
   console.log('A user connected')
 
   socket.on('disconnect', () => {
@@ -57,6 +58,23 @@ io.on('connection', (socket) => {
 
     io.emit('chat message', msg, result.lastInsertRowid.toString())
   })
+
+  console.log(socket.handshake.auth)
+
+  if (!socket.recovered) {
+    try {
+      const results = await db.execute({
+        sql: 'SELECT * FROM messages WHERE id > ?',
+        args: [socket.handshake.auth.serverOffset ?? 0]
+      })
+
+      results.rows.forEach((row) => {
+        socket.emit('chat message', row.content, row.id.toString())
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
 })
 
 app.use(logger('dev'))
