@@ -1,41 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat!</title>
-    <script type="module">
-      import { io } from 'https://cdn.socket.io/4.6.1/socket.io.esm.min.js'
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat!</title>
+  <script type="module">
+    import { io } from 'https://cdn.socket.io/4.6.1/socket.io.esm.min.js'
+
+    const getUsername = async () => {
+      const username = localStorage.getItem('username')
+      if (username) {
+        console.log(`User existed: ${username}`)
+        return username
+      }
+
+      const res = await fetch('http://random-data-api.com/api/users/random_user')
+      const { username: randomUserName } = await res.json()
+
+      localStorage.setItem('username', randomUserName)
+      return randomUserName
+    }
+
+    (async () => {
+      const username = await getUsername()
+
       const socket = io({
         auth: {
+          username,
           serverOffset: 0,
         }
       })
-      
+
       const form = document.getElementById('form')
       const input = document.getElementById('input')
       const messages = document.getElementById('messages')
 
-      socket.on('chat message', (msg, serverOffset) => {
-        const li = document.createElement('li')
-        li.textContent = msg
-        messages.appendChild(li)
-        socket.auth.serverOffset = serverOffset
-      })
+      socket.on('chat message', (msg, serverOffset, username) => {
+        const item = `<li>
+            <p>${msg}</p>
+            <small>${username}</small>
+            </li>`;
+
+        messages.insertAdjacentHTML('beforeend', item);
+        socket.auth.serverOffset = serverOffset;
+
+        messages.scrollTo({ top: messages.scrollHeight, behavior: "smooth" });
+      });
+
+
 
       form.addEventListener('submit', (e) => {
         e.preventDefault()
-
-        if(input.value){
-          socket.emit('chat message', input.value)
+        if (input.value) {
+          socket.emit('chat message', input.value, username)
           input.value = ''
-          
         }
       })
+    })()
+  </script>
 
-    </script>
 
-<style>
+  <style>
     *,
     *::before,
     *::after {
@@ -116,17 +142,18 @@
     #form>button:hover {
       background: #0cf;
     }
-</style>
+  </style>
 </head>
+
 <body>
-   <section id="chat">
+  <section id="chat">
     <ul id="messages"></ul>
     <form id="form">
-        <input type="text" name="message" id="input" placeholder="Type a message" 
-        autocomplete="off" />
-        <button type="submit">Send</button>
+      <input type="text" name="message" id="input" placeholder="Type a message" autocomplete="off" />
+      <button type="submit">Send</button>
 
     </form>
-   </section>
+  </section>
 </body>
+
 </html>
