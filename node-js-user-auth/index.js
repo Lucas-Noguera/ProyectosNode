@@ -1,20 +1,43 @@
 import express from 'express'
 import { UserRepository } from './user-repository.js'
+import { validateUser } from './schemas/users.js'
 
 const app = express()
 
 const port = process.env.PORT || 3000
 
+app.set('view engine', 'ejs')
 app.use(express.json())
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.render('example', { username: 'ANASHE' })
 })
 
-app.post('/login', (req, res) => {})
+app.post('/login', (req, res) => {
+  const result = validateUser(req.body)
+
+  if (result.error) {
+    return res.status(400).json({ error: result.error.issues })
+  }
+
+  const { username, password } = result.data
+  UserRepository.login({ username, password })
+    .then((user) => {
+      res.send({ user })
+    })
+    .catch((error) => {
+      res.status(400).send(error.message)
+    })
+})
 
 app.post('/register', async (req, res) => {
-  const { username, password } = req.body
+  const result = validateUser(req.body)
+
+  if (result.error) {
+    return res.status(400).json({ error: result.error.issues })
+  }
+
+  const { username, password } = result.data
 
   try {
     const id = await UserRepository.create({ username, password })
